@@ -10,6 +10,8 @@ A modern, high-quality jokes application built with Next.js 14 and powered by Jo
 - **Mood Presets**: One-click configuration for "Geek Mode", "Pun Party", "Spooky", etc.
 - **Rate Limit Handling**: Smart handling of API 429 errors with visual countdown.
 - **Proxy API**: All requests proxied through Next.js Route Handlers to manage headers and security.
+- **Rough & Ready Translation**: Translate jokes into Moroccan Darija (Arabic or Latin) using our custom AI worker.
+- **Joke Mode**: Optimized translation that attempts to preserve the humor.
 - **Favorites**: Save your best jokes to local storage.
 - **Accessibility**: Keyboard shortcuts (`J`/`Space` for new joke, `R` for reveal, `F` for favorite).
 
@@ -35,6 +37,15 @@ A modern, high-quality jokes application built with Next.js 14 and powered by Jo
    ```
 
 3. Open [http://localhost:3000](http://localhost:3000)
+
+## Configuration
+
+Create a `.env` file based on `.env.example`:
+
+```env
+NEXT_PUBLIC_FRONTEND_API_BASE_URL="https://jokes-translator.essadikine.workers.dev"
+NEXT_PUBLIC_FRONTEND_TRANSLATE_PATH="/translate"
+```
 
 ## API Structure
 

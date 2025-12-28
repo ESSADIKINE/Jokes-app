@@ -14,11 +14,6 @@ const CATEGORIES = ["Programming", "Misc", "Dark", "Pun", "Spooky", "Christmas"]
 const FLAGS = ["nsfw", "religious", "political", "racist", "sexist", "explicit"]
 const LANGUAGES = [
     { value: "en", label: "English" },
-    { value: "cs", label: "Czech" },
-    { value: "de", label: "German" },
-    { value: "es", label: "Spanish" },
-    { value: "fr", label: "French" },
-    { value: "pt", label: "Portuguese" },
 ]
 
 const MOODS = [

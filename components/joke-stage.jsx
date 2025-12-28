@@ -11,16 +11,44 @@ import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 import { transitions } from "@/lib/motion"
 import { LaughMeter } from "./laugh-meter"
+import { TranslatePanel } from "./translate-panel"
+import { translateText } from "@/lib/translator-api"
+import { Globe } from "lucide-react"
 
 export function JokeStage({ joke, loading, error, onNext, isFavorite, onToggleFavorite }) {
     const [revealed, setRevealed] = useState(false)
+    const [showTranslate, setShowTranslate] = useState(false)
+    const [translating, setTranslating] = useState(false)
+    const [translationResult, setTranslationResult] = useState(null)
+    const [translationError, setTranslationError] = useState(null)
 
     // Auto-reveal if single, hide if twopart
     useEffect(() => {
         if (joke) {
             setRevealed(joke.type === "single")
+            setShowTranslate(false)
+            setTranslationResult(null)
+            setTranslationError(null)
         }
     }, [joke])
+
+    const handleTranslate = async (config) => {
+        setTranslating(true)
+        setTranslationResult(null)
+        setTranslationError(null)
+        try {
+            const res = await translateText(config)
+            if (res.ok) {
+                setTranslationResult(res.translated)
+            } else {
+                setTranslationError(res.error || "Translation failed")
+            }
+        } catch (err) {
+            setTranslationError(err.message)
+        } finally {
+            setTranslating(false)
+        }
+    }
 
     const copyJoke = () => {
         if (!joke) return
@@ -158,6 +186,16 @@ export function JokeStage({ joke, loading, error, onNext, isFavorite, onToggleFa
 
                                 </CardContent>
 
+                                <TranslatePanel
+                                    isOpen={showTranslate}
+                                    onClose={() => setShowTranslate(false)}
+                                    originalText={joke ? (joke.type === "single" ? joke.joke : `${joke.setup}\n\n${joke.delivery}`) : ""}
+                                    onTranslate={handleTranslate}
+                                    loading={translating}
+                                    result={translationResult}
+                                    error={translationError}
+                                />
+
                                 {/* Footer Actions */}
                                 <div className="p-4 bg-muted/30 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-4">
                                     <div className="flex gap-2 flex-wrap">
@@ -175,6 +213,9 @@ export function JokeStage({ joke, loading, error, onNext, isFavorite, onToggleFa
                                         </Button>
                                         <Button size="icon" variant="ghost" onClick={shareJoke} title="Share">
                                             <Share2 className="h-4 w-4" />
+                                        </Button>
+                                        <Button size="icon" variant="ghost" onClick={() => setShowTranslate(!showTranslate)} title="Translate">
+                                            <Globe className="h-4 w-4" />
                                         </Button>
                                         <Button
                                             size="icon"
