@@ -47,6 +47,34 @@ NEXT_PUBLIC_FRONTEND_API_BASE_URL="https://jokes-translator.essadikine.workers.d
 NEXT_PUBLIC_FRONTEND_TRANSLATE_PATH="/translate"
 ```
 
+## Architecture & Workflow 🏗️
+ 
+This project utilizes a secure, split-architecture to handle AI translations without exposing keys:
+ 
+1.  **Frontend (Next.js App Router)**
+    *   **Role**: User Interface & Interactivity.
+    *   **Action**: User clicks "Translate".
+    *   **Security**: **No API keys** are stored here. It only knows the public URL of the Cloudflare Worker.
+ 
+2.  **Middle Layer (Cloudflare Worker)**
+    *   **Role**: Secure Proxy & Logic Handler.
+    *   **Action**: Receives the request, validates it, and appends the `DEEPSEEK_API_KEY` (stored as a secure environment variable).
+    *   **Security**: The API key acts as a secret on the edge, never leaving strict server-side bounds.
+ 
+3.  **AI Engine (DeepSeek LLM)**
+    *   **Role**: Translation & Cultural Adaptation.
+    *   **Action**: Processes the English joke and returns a localized Moroccan Darija version (Arabic script or Latin).
+ 
+### Flow Diagram
+ 
+```mermaid
+graph LR
+    A[Browser / Next.js] -- "POST /translate (Text)" --> B[Cloudflare Worker]
+    B -- "Inject API Key" --> C[DeepSeek API]
+    C -- "Darija Translation" --> B
+    B -- "JSON Response" --> A
+```
+ 
 ## API Structure
 
 The app uses a proxy layer at `/app/api/**` to communicate with `v2.jokeapi.dev`. This ensures client-side CORS safety and centralized header management (e.g. rate limits).

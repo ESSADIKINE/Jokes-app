@@ -1,106 +1,86 @@
 "use client"
-import { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+
+import { motion } from "framer-motion"
+import { Shield, Zap, Sparkles, Server, Lock, ExternalLink, ArrowRight, Layers, Keyboard, Star, Code2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { ArchitectureVisual } from "@/components/about/architecture-visual"
+import { FeatureCard } from "@/components/about/feature-card"
+import { AboutHero } from "@/components/about/about-hero"
+import { NextJsLogo, CloudflareLogo, DeepSeekLogo, TailwindLogo, FramerLogo, ShadcnLogo, JokeApiLogo } from "@/components/about/tech-logos-extended"
 import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { Activity, Server, AlertCircle } from "lucide-react"
-import { toast } from "sonner"
+import Link from "next/link"
 
 export default function AboutPage() {
-    const [info, setInfo] = useState(null)
-    const [ping, setPing] = useState(null)
-
-    useEffect(() => {
-        fetch("/api/meta/info").then(res => res.json()).then(setInfo).catch(console.error)
-    }, [])
-
-    const handlePing = async () => {
-        const start = Date.now()
-        try {
-            const res = await fetch("/api/meta/ping")
-            const end = Date.now()
-            if (res.ok) {
-                setPing(end - start)
-                toast.success(`Pong! Took ${end - start}ms`)
-            }
-        } catch {
-            toast.error("Ping failed")
-        }
-    }
-
     return (
-        <div className="max-w-4xl mx-auto space-y-8 animate-in fly-in-y-4 duration-500">
-            <div className="text-center space-y-4">
-                <h1 className="text-4xl font-black tracking-tight">About Jokes 😄</h1>
-                <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-                    A premium joke experience powered by JokeAPI, built with Next.js 14, standardized with Tailwind CSS and shadcn/ui.
-                </p>
-            </div>
+        <div className="container mx-auto max-w-6xl py-12 md:py-20 space-y-32">
 
-            <div className="grid md:grid-cols-2 gap-6">
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <Server className="h-5 w-5" />
-                            API Statistics
-                        </CardTitle>
-                        <CardDescription>Real-time data from JokeAPI</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        {info ? (
-                            <div className="space-y-2">
-                                <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Version</span>
-                                    <span className="font-mono">{info.version}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Total Jokes</span>
-                                    <span className="font-mono font-bold text-primary">{info.jokes?.totalCount}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Safe Jokes</span>
-                                    <span className="font-mono">{info.jokes?.safeJokesCount}</span>
-                                </div>
-                                <Separator />
-                                <div className="flex justify-between items-center pt-2">
-                                    <span className="text-muted-foreground">Status</span>
-                                    <Button size="sm" variant="outline" onClick={handlePing}>
-                                        {ping ? `Ping: ${ping}ms` : "Ping API"}
-                                        <Activity className="ml-2 h-4 w-4" />
-                                    </Button>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="animate-pulse h-20 bg-muted/20 rounded" />
-                        )}
-                    </CardContent>
-                </Card>
+            <AboutHero />
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <AlertCircle className="h-5 w-5" />
-                            Rate Limiting
-                        </CardTitle>
-                        <CardDescription>How we handle API traffic</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4 text-sm text-muted-foreground">
-                        <p>
-                            JokeAPI imposes a limit of approximately <strong>120 requests per minute</strong>.
-                        </p>
-                        <div className="bg-muted p-4 rounded-lg flex flex-col gap-2">
-                            <div className="flex items-center gap-2">
-                                <Badge variant="outline">429</Badge>
-                                <span>Too Many Requests</span>
-                            </div>
-                            <p>
-                                If you hit the limit, we automatically catch the 429 error and reading the <code>Retry-After</code> header to show you a countdown.
-                            </p>
-                        </div>
-                    </CardContent>
-                </Card>
+            {/* Feature Pillars */}
+            <section className="grid md:grid-cols-3 gap-6">
+                <FeatureCard
+                    icon={<Layers className="h-5 w-5" />}
+                    title="Jokes Discovery"
+                    description="Browse thousands of jokes with granular filters for category, type, and safety flags. Powered by our custom Next.js proxy for optimal performance."
+                    className="h-full"
+                />
+                <FeatureCard
+                    icon={<Sparkles className="h-5 w-5" />}
+                    title="AI Translation"
+                    description="Instantly translate humor into Moroccan Darija (Arabic or Latin) using our secure AI pipeline acting as a cultural bridge."
+                    className="h-full bg-primary/5 border-primary/20"
+                />
+                <FeatureCard
+                    icon={<Keyboard className="h-5 w-5" />}
+                    title="Power User UX"
+                    description="Designed for speed with keyboard shortcuts (J, R, F), favorites management, and responsive animations that feel alive."
+                    className="h-full"
+                />
+            </section>
+
+            {/* Architecture Visual */}
+            <section className="scroll-mt-24 space-y-8" id="architecture">
+                <div className="text-center space-y-4">
+                    <h2 className="text-3xl md:text-3xl font-bold tracking-tight">Dual-Pipeline Architecture</h2>
+                    <p className="text-muted-foreground max-w-2xl mx-auto">
+                        Two distinct, optimized workflows handle content delivery and AI processing independently.
+                    </p>
+                </div>
+                <div className="bg-muted/20 border border-border/50 rounded-3xl overflow-hidden relative">
+                    <div className="absolute inset-0 bg-grid-white/5 opacity-10 pointer-events-none" />
+                    <ArchitectureVisual />
+                </div>
+            </section>
+
+            {/* Tech Stack */}
+            <section className="space-y-12">
+                <div className="text-center">
+                    <h2 className="text-2xl font-bold tracking-tight mb-2">Built With</h2>
+                    <p className="text-muted-foreground">Modern stack for maximum performance.</p>
+                </div>
+
+                <div className="flex flex-wrap justify-center gap-8 md:gap-12 opacity-80 hover:opacity-100 transition-opacity">
+                    <TechItem icon={<NextJsLogo className="h-10 w-10" />} label="Next.js 14" />
+                    <TechItem icon={<CloudflareLogo className="h-10 w-10" />} label="Workers" />
+                    <TechItem icon={<DeepSeekLogo className="h-10 w-10 text-blue-500" />} label="DeepSeek" />
+                    <TechItem icon={<TailwindLogo className="h-10 w-10" />} label="Tailwind" />
+                    <TechItem icon={<ShadcnLogo className="h-10 w-10 text-foreground" />} label="shadcn/ui" />
+                    <TechItem icon={<FramerLogo className="h-10 w-10" />} label="Motion" />
+                    <TechItem icon={<JokeApiLogo className="h-10 w-10 text-primary" />} label="JokeAPI" />
+                </div>
+            </section>
+
+        </div>
+    )
+}
+
+function TechItem({ icon, label }) {
+    return (
+        <div className="flex flex-col items-center gap-3">
+            <div className="p-3 bg-muted/30 rounded-xl">
+                {icon}
             </div>
+            <span className="text-sm font-medium">{label}</span>
         </div>
     )
 }
