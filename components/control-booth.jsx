@@ -10,8 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { cn } from "@/lib/utils"
 
-const CATEGORIES = ["Programming", "Misc", "Dark", "Pun", "Spooky", "Christmas"]
-const FLAGS = ["nsfw", "religious", "political", "racist", "sexist", "explicit"]
+const CATEGORIES = ["Programming", "Misc", "Pun", "Spooky", "Christmas"]
+const FLAGS = ["religious", "political"]
 const LANGUAGES = [
     { value: "en", label: "English" },
 ]
